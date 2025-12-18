@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>create-mvp-kit | Ship Your MVP in 2 Minutes</title>
+    <meta
+      name="description"
+      content="Scaffold a production-ready MVP with FastAPI + Next.js + Railway + Vercel. One command. Fully deployed. Under 2 minutes."
+    />
+    <meta
+      name="keywords"
+      content="MVP, boilerplate, FastAPI, Next.js, Railway, Vercel, full-stack, CLI, scaffold"
+    />
+    <meta
+      property="og:title"
+      content="create-mvp-kit | Ship Your MVP in 2 Minutes"
+    />
+    <meta
+      property="og:description"
+      content="One command gives you a fully deployed full-stack app with FastAPI + Next.js."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-primary: #0a0a0b;
+        --bg-secondary: #111113;
+        --bg-tertiary: #18181b;
+        --accent-primary: #10b981;
+        --accent-secondary: #34d399;
+        --accent-glow: rgba(16, 185, 129, 0.15);
+        --text-primary: #fafafa;
+        --text-secondary: #a1a1aa;
+        --text-muted: #71717a;
+        --border-color: #27272a;
+        --terminal-bg: #0c0c0d;
+        --success: #22c55e;
+        --warning: #f59e0b;
+        --info: #3b82f6;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Outfit", -apple-system, sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* Animated background */
+      .bg-grid {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: linear-gradient(
+            rgba(16, 185, 129, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .bg-glow {
+        position: fixed;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          var(--accent-glow) 0%,
+          transparent 70%
+        );
+        filter: blur(80px);
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .bg-glow-1 {
+        top: -200px;
+        right: -100px;
+        animation: float 20s ease-in-out infinite;
+      }
+
+      .bg-glow-2 {
+        bottom: -300px;
+        left: -200px;
+        animation: float 25s ease-in-out infinite reverse;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+        50% {
+          transform: translate(50px, 30px);
+        }
+      }
+
+      /* Navigation */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 20px 0;
+        background: rgba(10, 10, 11, 0.8);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid transparent;
+        z-index: 100;
+        transition: border-color 0.3s;
+      }
+
+      nav.scrolled {
+        border-bottom-color: var(--border-color);
+      }
+
+      nav .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--accent-primary);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .logo-icon {
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(
+          135deg,
+          var(--accent-primary),
+          var(--accent-secondary)
+        );
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+
+      .nav-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+
+      .nav-links a:hover {
+        color: var(--text-primary);
+      }
+
+      .nav-cta {
+        background: var(--accent-primary);
+        color: var(--bg-primary) !important;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: transform 0.2s, box-shadow 0.2s !important;
+      }
+
+      .nav-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px var(--accent-glow);
+      }
+
+      /* Hero Section */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 120px 0 80px;
+      }
+
+      .hero-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        padding: 8px 16px;
+        border-radius: 100px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+        animation: fadeInUp 0.6s ease-out;
+      }
+
+      .hero-badge .dot {
+        width: 8px;
+        height: 8px;
+        background: var(--success);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .hero h1 {
+        font-size: 4rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 24px;
+        animation: fadeInUp 0.6s ease-out 0.1s backwards;
+      }
+
+      .hero h1 .highlight {
+        background: linear-gradient(
+          135deg,
+          var(--accent-primary),
+          var(--accent-secondary)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero-description {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        margin-bottom: 40px;
+        max-width: 480px;
+        animation: fadeInUp 0.6s ease-out 0.2s backwards;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 16px;
+        animation: fadeInUp 0.6s ease-out 0.3s backwards;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 32px;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s;
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+      }
+
+      .btn-primary {
+        background: var(--accent-primary);
+        color: var(--bg-primary);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px var(--accent-glow);
+      }
+
+      .btn-secondary {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+      }
+
+      .btn-secondary:hover {
+        background: var(--bg-secondary);
+        border-color: var(--text-muted);
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Terminal */
+      .terminal {
+        background: var(--terminal-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05),
+          0 20px 50px -10px rgba(0, 0, 0, 0.5);
+        animation: fadeInUp 0.8s ease-out 0.4s backwards;
+      }
+
+      .terminal-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 20px;
+        background: var(--bg-tertiary);
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .terminal-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      .terminal-dot.red {
+        background: #ff5f56;
+      }
+      .terminal-dot.yellow {
+        background: #ffbd2e;
+      }
+      .terminal-dot.green {
+        background: #27ca40;
+      }
+
+      .terminal-title {
+        flex: 1;
+        text-align: center;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .terminal-body {
+        padding: 24px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.9rem;
+        line-height: 1.8;
+        min-height: 320px;
+      }
+
+      .terminal-line {
+        opacity: 0;
+        animation: typeIn 0.3s ease-out forwards;
+      }
+
+      .terminal-line:nth-child(1) {
+        animation-delay: 0.8s;
+      }
+      .terminal-line:nth-child(2) {
+        animation-delay: 1.2s;
+      }
+      .terminal-line:nth-child(3) {
+        animation-delay: 1.6s;
+      }
+      .terminal-line:nth-child(4) {
+        animation-delay: 2s;
+      }
+      .terminal-line:nth-child(5) {
+        animation-delay: 2.4s;
+      }
+      .terminal-line:nth-child(6) {
+        animation-delay: 2.8s;
+      }
+      .terminal-line:nth-child(7) {
+        animation-delay: 3.2s;
+      }
+      .terminal-line:nth-child(8) {
+        animation-delay: 3.6s;
+      }
+      .terminal-line:nth-child(9) {
+        animation-delay: 4s;
+      }
+      .terminal-line:nth-child(10) {
+        animation-delay: 4.4s;
+      }
+      .terminal-line:nth-child(11) {
+        animation-delay: 4.8s;
+      }
+
+      @keyframes typeIn {
+        from {
+          opacity: 0;
+          transform: translateX(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .terminal-prompt {
+        color: var(--accent-primary);
+      }
+
+      .terminal-command {
+        color: var(--text-primary);
+      }
+
+      .terminal-output {
+        color: var(--text-secondary);
+      }
+
+      .terminal-success {
+        color: var(--success);
+      }
+
+      .terminal-url {
+        color: var(--info);
+      }
+
+      /* Features Section */
+      .features {
+        padding: 120px 0;
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 80px;
+      }
+
+      .section-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.85rem;
+        color: var(--accent-primary);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+      }
+
+      .section-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+
+      .section-description {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .feature-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 32px;
+        transition: all 0.3s;
+      }
+
+      .feature-card:hover {
+        border-color: var(--accent-primary);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px -20px var(--accent-glow);
+      }
+
+      .feature-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--accent-glow), transparent);
+        border: 1px solid var(--accent-primary);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+
+      .feature-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .feature-description {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+      }
+
+      /* Stack Section */
+      .stack {
+        padding: 120px 0;
+        background: var(--bg-secondary);
+      }
+
+      .stack-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 24px;
+      }
+
+      .stack-item {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 32px 24px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+
+      .stack-item:hover {
+        border-color: var(--text-muted);
+        transform: translateY(-4px);
+      }
+
+      .stack-logo {
+        font-size: 2.5rem;
+        margin-bottom: 16px;
+      }
+
+      .stack-name {
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .stack-role {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      /* How It Works */
+      .how-it-works {
+        padding: 120px 0;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 32px;
+        position: relative;
+      }
+
+      .steps::before {
+        content: "";
+        position: absolute;
+        top: 40px;
+        left: 60px;
+        right: 60px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--accent-primary),
+          var(--accent-secondary)
+        );
+        opacity: 0.3;
+      }
+
+      .step {
+        text-align: center;
+        position: relative;
+      }
+
+      .step-number {
+        width: 80px;
+        height: 80px;
+        background: var(--bg-secondary);
+        border: 2px solid var(--accent-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent-primary);
+        margin: 0 auto 24px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .step-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .step-description {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      /* CTA Section */
+      .cta {
+        padding: 120px 0;
+        text-align: center;
+      }
+
+      .cta-box {
+        background: linear-gradient(
+          135deg,
+          var(--bg-secondary),
+          var(--bg-tertiary)
+        );
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 80px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cta-box::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle at center,
+          var(--accent-glow) 0%,
+          transparent 50%
+        );
+        opacity: 0.5;
+      }
+
+      .cta-content {
+        position: relative;
+        z-index: 1;
+      }
+
+      .cta h2 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+
+      .cta p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        margin-bottom: 40px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .cta-command {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        background: var(--terminal-bg);
+        border: 1px solid var(--border-color);
+        padding: 16px 24px;
+        border-radius: 12px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1rem;
+        margin-bottom: 32px;
+      }
+
+      .cta-command code {
+        color: var(--accent-secondary);
+      }
+
+      .copy-btn {
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.85rem;
+      }
+
+      .copy-btn:hover {
+        background: var(--accent-primary);
+        color: var(--bg-primary);
+        border-color: var(--accent-primary);
+      }
+
+      .copy-btn.copied {
+        background: var(--success);
+        color: var(--bg-primary);
+        border-color: var(--success);
+      }
+
+      /* Footer */
+      footer {
+        padding: 40px 0;
+        border-top: 1px solid var(--border-color);
+      }
+
+      footer .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 32px;
+      }
+
+      .footer-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.2s;
+      }
+
+      .footer-links a:hover {
+        color: var(--text-primary);
+      }
+
+      .footer-credit {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      .footer-credit a {
+        color: var(--accent-primary);
+        text-decoration: none;
+      }
+
+      /* Responsive */
+      @media (max-width: 1024px) {
+        .hero-content {
+          grid-template-columns: 1fr;
+          gap: 60px;
+        }
+
+        .hero h1 {
+          font-size: 3rem;
+        }
+
+        .features-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .stack-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .steps {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .steps::before {
+          display: none;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .hero {
+          padding: 100px 0 60px;
+        }
+
+        .hero h1 {
+          font-size: 2.2rem;
+        }
+
+        .hero-description {
+          font-size: 1.1rem;
+        }
+
+        .hero-actions {
+          flex-direction: column;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+
+        .features-grid,
+        .stack-grid,
+        .steps {
+          grid-template-columns: 1fr;
+        }
+
+        .cta-box {
+          padding: 48px 24px;
+        }
+
+        .cta h2 {
+          font-size: 2rem;
+        }
+
+        .cta-command {
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        footer .container {
+          flex-direction: column;
+          gap: 24px;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <nav>
+      <div class="container">
+        <a href="#" class="logo">
+          <span class="logo-icon">⚡</span>
+          create-mvp-kit
+        </a>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#stack">Stack</a>
+          <a href="#how-it-works">How it Works</a>
+          <a
+            href="https://github.com/arshakil/create-mvp-kit"
+            target="_blank"
+            class="nav-cta"
+            >GitHub</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-text">
+            <div class="hero-badge">
+              <span class="dot"></span>
+              Production-ready in 2 minutes
+            </div>
+            <h1>
+              Ship your <span class="highlight">MVP</span> before your coffee
+              gets cold
+            </h1>
+            <p class="hero-description">
+              One command scaffolds a full-stack app with FastAPI + Next.js,
+              creates a GitHub repo, and deploys to Railway + Vercel. Fully
+              configured CI/CD included.
+            </p>
+            <div class="hero-actions">
+              <a
+                href="https://github.com/arshakil/create-mvp-kit"
+                target="_blank"
+                class="btn btn-primary"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                  />
+                </svg>
+                View on GitHub
+              </a>
+              <a href="#how-it-works" class="btn btn-secondary"
+                >See How It Works</a
+              >
+            </div>
+          </div>
+          <div class="terminal">
+            <div class="terminal-header">
+              <span class="terminal-dot red"></span>
+              <span class="terminal-dot yellow"></span>
+              <span class="terminal-dot green"></span>
+              <span class="terminal-title">Terminal</span>
+            </div>
+            <div class="terminal-body">
+              <div class="terminal-line">
+                <span class="terminal-prompt">$</span>
+                <span class="terminal-command"
+                  >npx @shakil_nee/create-mvp-kit my-app</span
+                >
+              </div>
+              <div class="terminal-line">
+                <span class="terminal-output">Creating project: my-app</span>
+              </div>
+              <div class="terminal-line">
+                <span class="terminal-output"></span>
+              </div>
+              <div class="terminal-line">
+                <span class="terminal-success">✓</span>
+                <span class="terminal-output">Project files generated</span>
+              </div>
+              <div class="terminal-line">
+                <span class="terminal-success">✓</span>
+                <span class="terminal-output">GitHub repository created</span>
+              </div>
+              <div class="terminal-line">
+                <span class="terminal-success">✓</span>
+                <span class="terminal-output">Backend deployed to Railway</span>
+              </div>
+              <div class="terminal-line">
+                <span class="terminal-success">✓</span>
+                <span class="terminal-output">Frontend deployed to Vercel</span>
+              </div>
+              <div class="terminal-line">
+                <span class="terminal-output"></span>
+              </div>
+              <div class="terminal-line">
+                <span class="terminal-output">🎉 Your MVP is ready!</span>
+              </div>
+              <div class="terminal-line">
+                <span class="terminal-output">Frontend: </span
+                ><span class="terminal-url">https://my-app.vercel.app</span>
+              </div>
+              <div class="terminal-line">
+                <span class="terminal-output">Backend: </span
+                ><span class="terminal-url">https://my-app.up.railway.app</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-label">Features</p>
+          <h2 class="section-title">Everything you need to ship fast</h2>
+          <p class="section-description">
+            Stop wasting hours on boilerplate. Get a production-ready setup with
+            one command.
+          </p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🚀</div>
+            <h3 class="feature-title">Instant Deployment</h3>
+            <p class="feature-description">
+              Backend auto-deploys to Railway, frontend to Vercel. Live URLs in
+              under 2 minutes.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔄</div>
+            <h3 class="feature-title">CI/CD Configured</h3>
+            <p class="feature-description">
+              GitHub Actions workflow included. Push to main and both apps
+              deploy automatically.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔐</div>
+            <h3 class="feature-title">Private Repository</h3>
+            <p class="feature-description">
+              Creates a private GitHub repo with all secrets and environment
+              variables configured.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🌐</div>
+            <h3 class="feature-title">CORS Pre-configured</h3>
+            <p class="feature-description">
+              Frontend and backend can communicate out of the box. No
+              configuration needed.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📦</div>
+            <h3 class="feature-title">Modern Stack</h3>
+            <p class="feature-description">
+              FastAPI + Next.js 14 + TypeScript + Tailwind CSS.
+              Production-proven technologies.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">💾</div>
+            <h3 class="feature-title">Database Ready</h3>
+            <p class="feature-description">
+              SQLite included with helpers. Easy to swap for Postgres, MySQL, or
+              any database.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stack" id="stack">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-label">Tech Stack</p>
+          <h2 class="section-title">Built with the best tools</h2>
+          <p class="section-description">
+            A curated stack that balances developer experience with production
+            reliability.
+          </p>
+        </div>
+        <div class="stack-grid">
+          <div class="stack-item">
+            <div class="stack-logo">⚡</div>
+            <p class="stack-name">FastAPI</p>
+            <p class="stack-role">Backend</p>
+          </div>
+          <div class="stack-item">
+            <div class="stack-logo">▲</div>
+            <p class="stack-name">Next.js 14</p>
+            <p class="stack-role">Frontend</p>
+          </div>
+          <div class="stack-item">
+            <div class="stack-logo">🎨</div>
+            <p class="stack-name">Tailwind CSS</p>
+            <p class="stack-role">Styling</p>
+          </div>
+          <div class="stack-item">
+            <div class="stack-logo">🚂</div>
+            <p class="stack-name">Railway</p>
+            <p class="stack-role">Backend Host</p>
+          </div>
+          <div class="stack-item">
+            <div class="stack-logo">▲</div>
+            <p class="stack-name">Vercel</p>
+            <p class="stack-role">Frontend Host</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-label">How It Works</p>
+          <h2 class="section-title">From zero to deployed in 4 steps</h2>
+          <p class="section-description">
+            Get your tokens once, then scaffold unlimited MVPs.
+          </p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3 class="step-title">Get Your Tokens</h3>
+            <p class="step-description">
+              Grab tokens from GitHub, Railway, and Vercel. One-time setup,
+              takes 2 minutes.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3 class="step-title">Run the CLI</h3>
+            <p class="step-description">
+              Execute npx @shakil_nee/create-mvp-kit with your project name.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3 class="step-title">Answer Prompts</h3>
+            <p class="step-description">
+              Enter your tokens when prompted. The CLI handles everything else.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <h3 class="step-title">Ship It!</h3>
+            <p class="step-description">
+              Your MVP is live with frontend, backend, repo, and CI/CD all
+              configured.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+        <div class="cta-box">
+          <div class="cta-content">
+            <h2>Ready to ship?</h2>
+            <p>Stop building boilerplate. Start building your product.</p>
+            <div class="cta-command">
+              <code>npx @shakil_nee/create-mvp-kit my-app</code>
+              <button class="copy-btn" onclick="copyCommand()">Copy</button>
+            </div>
+            <div>
+              <a
+                href="https://github.com/arshakil/create-mvp-kit"
+                target="_blank"
+                class="btn btn-primary"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                  />
+                </svg>
+                Get Started
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="footer-links">
+          <a href="https://github.com/arshakil/create-mvp-kit" target="_blank"
+            >GitHub</a
+          >
+          <a
+            href="https://github.com/arshakil/create-mvp-kit/issues"
+            target="_blank"
+            >Report Bug</a
+          >
+          <a
+            href="https://github.com/arshakil/create-mvp-kit/issues"
+            target="_blank"
+            >Request Feature</a
+          >
+        </div>
+        <p class="footer-credit">
+          Made with ❤️ by
+          <a href="https://arshakil.com" target="_blank">Shakil</a>
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Navbar scroll effect
+      const nav = document.querySelector("nav");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 50) {
+          nav.classList.add("scrolled");
+        } else {
+          nav.classList.remove("scrolled");
+        }
+      });
+
+      // Copy command
+      function copyCommand() {
+        const command = "npx @shakil_nee/create-mvp-kit my-app";
+        navigator.clipboard.writeText(command).then(() => {
+          const btn = document.querySelector(".copy-btn");
+          btn.textContent = "Copied!";
+          btn.classList.add("copied");
+          setTimeout(() => {
+            btn.textContent = "Copy";
+            btn.classList.remove("copied");
+          }, 2000);
+        });
+      }
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
